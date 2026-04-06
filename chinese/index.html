@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Tiếng Trung - Luyện Viết & Đối Chiếu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .hanzi-font {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        #gameCanvas {
+            touch-action: none;
+            background-image: 
+                linear-gradient(to right, #fee2e2 1px, transparent 1px),
+                linear-gradient(to bottom, #fee2e2 1px, transparent 1px),
+                linear-gradient(45deg, #fee2e2 0.5px, transparent 0.5px),
+                linear-gradient(-45deg, #fee2e2 0.5px, transparent 0.5px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+            background-position: center;
+            cursor: crosshair;
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1 / 1;
+        }
+        .grid-lines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; border: 2px solid #ef4444;
+        }
+        .grid-lines::before {
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; border-top: 1px dashed #fca5a5;
+        }
+        .grid-lines::after {
+            content: ''; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; border-left: 1px dashed #fca5a5;
+        }
+        .diagonal-1, .diagonal-2 {
+            position: absolute; width: 141.4%; height: 1px; border-top: 1px dotted #fee2e2;
+        }
+        .diagonal-1 { top: 0; left: 0; transform: rotate(45deg); transform-origin: top left; }
+        .diagonal-2 { top: 0; right: 0; transform: rotate(-45deg); transform-origin: top right; }
+        
+        .loading-dots:after {
+            content: '.'; animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        .feedback-pop { animation: popIn 0.3s ease-out; }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .rotate-icon { transition: transform 0.5s ease; }
+        .rotate-icon:active { transform: rotate(360deg); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-sm py-4 px-6 border-b border-gray-200">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-red-600 flex items-center gap-2">
+                <span class="text-3xl">墨</span> Luyện Viết Tiếng Trung
+            </h1>
+            <div class="text-sm text-gray-400 font-medium italic">Tự đối chiếu & Thống kê</div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative overflow-hidden">
+                
+                <!-- Feedback Overlay -->
+                <div id="feedbackOverlay" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-white/95 backdrop-blur-md">
+                    <div class="text-center feedback-pop max-w-md w-full p-6">
+                        <h2 class="text-xl font-bold mb-6 text-gray-800">Hãy so sánh nét vẽ của bạn:</h2>
+                        
+                        <div class="flex justify-center gap-8 mb-8">
+                            <div class="text-center">
+                                <p class="text-xs text-gray-400 uppercase mb-2">Bạn đã viết</p>
+                                <div id="userResultPreview" class="w-32 h-32 border-2 border-gray-200 rounded-lg bg-white overflow-hidden">
+                                    <img id="userDrawingImg" src="" class="w-full h-full object-contain">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-400 uppercase mb-2">Đáp án chuẩn</p>
+                                <div class="w-32 h-32 border-2 border-red-200 rounded-lg bg-red-50 flex items-center justify-center">
+                                    <span id="correctCharPreview" class="hanzi-font text-7xl text-red-600">?</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-600 mb-6 italic">Bạn thấy mình viết đúng không?</p>
+                        
+                        <div class="flex gap-4">
+                            <button id="markWrongBtn" class="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold transition">Sai rồi</button>
+                            <button id="markCorrectBtn" class="flex-1 py-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-bold transition shadow-lg shadow-green-100">Chính xác</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="gameSetup">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Thiết lập Luyện tập</h2>
+                    
+                    <div id="sheetInputContainer">
+                        <label class="block text-sm font-bold text-gray-700 mb-2 px-1">Link Google Sheet CSV:</label>
+                        <input type="text" id="sheetUrl" class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-400 focus:outline-none mb-6" placeholder="Nhập link CSV của bạn..." value="https://docs.google.com/spreadsheets/d/e/2PACX-1vSH1u3gsoSKe2T8Cm_RtAqmk7SyE3PENI1mFz0vaU2wxZGYQv10Lus3QMfyXjgsunf-hYuxiZuoylPJ/pub?output=csv">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                        <div class="flex flex-col">
+                            <label class="text-sm font-bold text-gray-700 mb-2">Số lần lặp lại mỗi từ:</label>
+                            <input type="number" id="repeatCount" value="5" min="1" max="50" class="p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-400 focus:outline-none">
+                        </div>
+                        <div class="flex items-center justify-start md:justify-center pt-6">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="hideHanzi" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-red-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <span class="ml-3 text-sm font-medium text-gray-700">Ẩn chữ Hán khi viết</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="startGameBtn" class="w-full py-4 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition shadow-lg flex justify-center items-center gap-2">
+                        Bắt đầu Luyện tập
+                    </button>
+                    
+                    <div id="loadingOverlay" class="hidden mt-4 text-center text-red-600 font-medium italic">
+                        <span class="loading-dots">Đang chuẩn bị dữ liệu</span>
+                    </div>
+                </div>
+
+                <!-- Game Active Screen -->
+                <div id="gameActive" class="hidden flex flex-col items-center">
+                    <div class="w-full flex justify-between items-center mb-4">
+                        <button onclick="resetGame()" class="text-gray-400 hover:text-gray-600 flex items-center gap-1 text-sm font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg> Thoát
+                        </button>
+                        <div class="flex gap-4 text-sm font-bold">
+                            <span class="text-green-600">✓ <span id="liveCorrectCount">0</span></span>
+                            <span class="text-red-500">✗ <span id="liveWrongCount">0</span></span>
+                        </div>
+                    </div>
+
+                    <div class="w-full bg-gray-100 h-3 rounded-full mb-6 overflow-hidden">
+                        <div id="gameProgress" class="bg-red-500 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row items-center gap-12 w-full justify-center">
+                        <div class="text-center w-full md:w-1/3">
+                            <h3 class="text-xs text-gray-400 uppercase tracking-widest mb-2 font-bold">Hãy viết:</h3>
+                            <div id="targetChar" class="hanzi-font text-8xl text-red-600 font-bold mb-2">?</div>
+                            <div id="gameHints" class="mb-4">
+                                <p id="gamePinyin" class="text-xl text-blue-600 font-semibold"></p>
+                                <p id="gameMeaning" class="text-sm text-gray-500 italic"></p>
+                            </div>
+                            <p id="gameStats" class="text-xs text-gray-400 font-medium">Câu: 1 / 10</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="canvas-container shadow-2xl border-4 border-red-50 rounded-xl overflow-hidden bg-white">
+                                <div class="grid-lines"><div class="diagonal-1"></div><div class="diagonal-2"></div></div>
+                                <canvas id="gameCanvas"></canvas>
+                            </div>
+                            <div class="flex gap-3 mt-4 w-full">
+                                <button onclick="clearGameCanvas()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition">Xóa</button>
+                                <button id="checkBtn" class="flex-[2] py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition flex justify-center items-center gap-2">
+                                    <span>Xong & Kiểm tra</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Summary Screen -->
+                <div id="gameComplete" class="hidden py-6">
+                    <div class="text-center mb-8">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Hoàn thành buổi tập!</h2>
+                        <p class="text-gray-500 italic">Dưới đây là kết quả của bạn</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-green-50 p-6 rounded-2xl border border-green-100 text-center">
+                            <p class="text-green-600 font-bold text-sm uppercase mb-1">Chính xác</p>
+                            <p id="finalCorrectCount" class="text-4xl font-black text-green-700">0</p>
+                        </div>
+                        <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-center">
+                            <p class="text-red-600 font-bold text-sm uppercase mb-1">Cần xem lại</p>
+                            <p id="finalWrongCount" class="text-4xl font-black text-red-700">0</p>
+                        </div>
+                    </div>
+
+                    <div id="wrongWordsSection" class="hidden mb-8">
+                        <h3 class="font-bold text-gray-700 mb-4 px-1 flex items-center gap-2">
+                            <span class="text-red-500">⚠</span> Danh sách các câu viết sai:
+                        </h3>
+                        <div id="wrongWordsList" class="space-y-2 max-h-60 overflow-y-auto pr-2">
+                            <!-- Words will be injected here -->
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        <button onclick="startSession(true)" class="w-full py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg">Luyện tập lại</button>
+                        <button onclick="resetGame()" class="w-full py-4 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition">Quay lại trang chính</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let isDrawing = false, lastX = 0, lastY = 0;
+        let gCanvas, gCtx;
+        let gameQueue = [], currentIndex = 0, isHidingHanzi = true;
+        let currentRawWords = [];
+        
+        // Stats tracking
+        let correctCount = 0;
+        let wrongCount = 0;
+        let wrongWordsHistory = [];
+
+        function setupCanvas(targetCanvas, container) {
+            const size = container.clientWidth;
+            targetCanvas.width = size;
+            targetCanvas.height = size;
+            const ctx = targetCanvas.getContext('2d');
+            ctx.lineJoin = 'round'; ctx.lineCap = 'round'; 
+            ctx.lineWidth = size / 35;
+            ctx.strokeStyle = '#1a1a1a';
+            return ctx;
+        }
+
+        function getPos(e, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function bindCanvasEvents(canvas, ctx) {
+            const start = (e) => { isDrawing = true; const pos = getPos(e, canvas); [lastX, lastY] = [pos.x, pos.y]; };
+            const draw = (e) => { if (!isDrawing) return; const pos = getPos(e, canvas); ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(pos.x, pos.y); ctx.stroke(); [lastX, lastY] = [pos.x, pos.y]; };
+            const stop = () => isDrawing = false;
+            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stop);
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); start(e); }, {passive: false});
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, {passive: false});
+            canvas.addEventListener('touchend', stop);
+        }
+
+        function parseCSV(str) {
+            const arr = []; let quote = false;
+            for (let row = col = c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c+1];
+                arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || "";
+                if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+                if (cc == '"') { quote = !quote; continue; }
+                if (cc == ',' && !quote) { ++col; continue; }
+                if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+                arr[row][col] += cc;
+            }
+            return arr;
+        }
+
+        async function parseCSVFromSheet(url) {
+            const cacheBuster = `&cb=${Date.now()}`;
+            const finalUrl = url.includes('?') ? `${url}${cacheBuster}` : `${url}?${cacheBuster}`;
+            const res = await fetch(finalUrl);
+            const text = await res.text();
+            const data = parseCSV(text);
+            return data.slice(1).filter(cols => cols[0]).map(cols => ({
+                char: cols[0].trim(), pinyin: (cols[1] || "").trim(), meaning: (cols[2] || "").trim()
+            }));
+        }
+
+        function createSmartQueue(words, repeats) {
+            let fullList = [];
+            words.forEach(w => {
+                for(let i=0; i<repeats; i++) fullList.push({...w});
+            });
+            let result = [];
+            let lastChar = null;
+            while (fullList.length > 0) {
+                let validChoices = fullList.filter(item => item.char !== lastChar);
+                if (validChoices.length === 0) validChoices = fullList;
+                const randomIndex = Math.floor(Math.random() * validChoices.length);
+                const chosenItem = validChoices[randomIndex];
+                const originalIndex = fullList.indexOf(chosenItem);
+                result.push(chosenItem);
+                lastChar = chosenItem.char;
+                fullList.splice(originalIndex, 1);
+            }
+            return result;
+        }
+
+        async function startSession(isRetry = false) {
+            const loading = document.getElementById('loadingOverlay');
+            const url = document.getElementById('sheetUrl').value.trim();
+            if (!url) return alert("Vui lòng nhập link Google Sheet.");
+            
+            loading.classList.remove('hidden');
+            try {
+                if (!isRetry || currentRawWords.length === 0) {
+                    currentRawWords = await parseCSVFromSheet(url);
+                }
+                const repeats = parseInt(document.getElementById('repeatCount').value) || 5;
+                isHidingHanzi = document.getElementById('hideHanzi').checked;
+                
+                gameQueue = createSmartQueue(currentRawWords, repeats);
+                currentIndex = 0;
+                correctCount = 0;
+                wrongCount = 0;
+                wrongWordsHistory = [];
+                
+                document.getElementById('liveCorrectCount').innerText = '0';
+                document.getElementById('liveWrongCount').innerText = '0';
+                document.getElementById('gameSetup').classList.add('hidden');
+                document.getElementById('gameComplete').classList.add('hidden');
+                document.getElementById('gameActive').classList.remove('hidden');
+                
+                updateGameUI();
+                
+                setTimeout(() => { 
+                    gCanvas = document.getElementById('gameCanvas');
+                    gCtx = setupCanvas(gCanvas, gCanvas.parentElement); 
+                    bindCanvasEvents(gCanvas, gCtx); 
+                }, 100);
+
+            } catch (e) { 
+                alert("Lỗi khi tải dữ liệu. Hãy đảm bảo link đã được 'Xuất bản trên web' dưới dạng CSV."); 
+            }
+            loading.classList.add('hidden');
+        }
+
+        document.getElementById('startGameBtn').onclick = () => startSession(false);
+
+        function updateGameUI() {
+            if (currentIndex >= gameQueue.length) {
+                showFinalResults();
+                return;
+            }
+            const item = gameQueue[currentIndex];
+            const target = document.getElementById('targetChar');
+            target.innerText = isHidingHanzi ? '?' : item.char;
+            target.className = isHidingHanzi ? "hanzi-font text-8xl text-gray-200 font-bold mb-2" : "hanzi-font text-8xl text-red-600 font-bold mb-2";
+            document.getElementById('gamePinyin').innerText = item.pinyin;
+            document.getElementById('gameMeaning').innerText = item.meaning;
+            document.getElementById('gameStats').innerText = `Câu: ${currentIndex + 1} / ${gameQueue.length}`;
+            document.getElementById('gameProgress').style.width = `${(currentIndex / gameQueue.length) * 100}%`;
+            clearGameCanvas();
+        }
+
+        function showFinalResults() {
+            document.getElementById('gameActive').classList.add('hidden');
+            document.getElementById('gameComplete').classList.remove('hidden');
+            
+            document.getElementById('finalCorrectCount').innerText = correctCount;
+            document.getElementById('finalWrongCount').innerText = wrongCount;
+            
+            const wrongSection = document.getElementById('wrongWordsSection');
+            const wrongList = document.getElementById('wrongWordsList');
+            
+            if (wrongWordsHistory.length > 0) {
+                wrongSection.classList.remove('hidden');
+                wrongList.innerHTML = '';
+                
+                // Group by word to avoid showing the same word too many times if failed multiple times
+                const uniqueWrongs = Array.from(new Set(wrongWordsHistory.map(w => w.char)))
+                    .map(char => wrongWordsHistory.find(w => w.char === char));
+
+                uniqueWrongs.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm";
+                    div.innerHTML = `
+                        <div class="hanzi-font text-2xl text-red-600 font-bold w-10 text-center">${item.char}</div>
+                        <div class="flex-grow">
+                            <div class="text-sm font-bold text-gray-800">${item.pinyin}</div>
+                            <div class="text-xs text-gray-500 italic">${item.meaning}</div>
+                        </div>
+                    `;
+                    wrongList.appendChild(div);
+                });
+            } else {
+                wrongSection.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('checkBtn').onclick = () => {
+            const item = gameQueue[currentIndex];
+            const dataUrl = gCanvas.toDataURL();
+            document.getElementById('userDrawingImg').src = dataUrl;
+            document.getElementById('correctCharPreview').innerText = item.char;
+            document.getElementById('feedbackOverlay').classList.remove('hidden');
+        };
+
+        document.getElementById('markCorrectBtn').onclick = () => {
+            correctCount++;
+            document.getElementById('liveCorrectCount').innerText = correctCount;
+            nextStep();
+        };
+
+        document.getElementById('markWrongBtn').onclick = () => {
+            wrongCount++;
+            document.getElementById('liveWrongCount').innerText = wrongCount;
+            wrongWordsHistory.push(gameQueue[currentIndex]);
+            nextStep();
+        };
+
+        function nextStep() {
+            document.getElementById('feedbackOverlay').classList.add('hidden');
+            currentIndex++;
+            updateGameUI();
+        }
+
+        function clearGameCanvas() { if(gCtx) gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height); }
+
+        function resetGame() {
+            document.getElementById('gameComplete').classList.add('hidden');
+            document.getElementById('gameActive').classList.add('hidden');
+            document.getElementById('gameSetup').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
