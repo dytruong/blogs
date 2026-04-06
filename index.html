@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H5 Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #171411;
+      --muted: #69615b;
+      --line: rgba(23,20,17,0.12);
+      --accent: #ef6d58;
+      --display: 'Manrope', sans-serif;
+      --body: 'Source Serif 4', serif;
+      --shadow: 0 18px 50px rgba(43,31,24,0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--body);
+      background: linear-gradient(180deg, #fbf8f2 0%, #f4ede3 100%);
+    }
+    .page {
+      width: min(1120px, calc(100% - 24px));
+      margin: 16px auto 34px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0 22px;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--display);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #f3b26f, var(--accent));
+    }
+    .brand-subtle {
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .stories {
+      display: grid;
+      gap: 22px;
+      padding-top: 28px;
+    }
+    .story-card {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr);
+      gap: 20px;
+      align-items: stretch;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.75);
+      box-shadow: var(--shadow);
+    }
+    .story-cover img {
+      width: 100%;
+      height: 100%;
+      min-height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+    .story-body {
+      padding: 22px;
+    }
+    .story-kicker {
+      color: var(--accent);
+      font: 800 0.72rem var(--display);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font: 800 clamp(1.9rem, 3vw, 3rem)/0.95 var(--display);
+      letter-spacing: -0.05em;
+    }
+    h2 a { color: inherit; text-decoration: none; }
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+    .story-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--muted);
+      font: 600 0.84rem var(--display);
+    }
+    @media (max-width: 760px) {
+      .page {
+        width: min(100%, calc(100% - 16px));
+        margin: 10px auto 22px;
+      }
+      .story-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand-mark"></div>
+      <div>
+        <div>H5</div>
+        <div class="brand-subtle">HTML Blog Publisher</div>
+      </div>
+    </header>
+    <section class="stories">
+      
+          <article class="story-card">
+            
+            <div class="story-body">
+              <div class="story-kicker">Interactive story</div>
+              <h2><a href="/blogs/colyseus/">colyseus</a></h2>
+              <p>A new post from your blog.</p>
+              <div class="story-meta">
+                <span>06 tháng 4, 2026</span>
+                <span>1 min read</span>
+              </div>
+            </div>
+          </article>
+        
+    </section>
+  </main>
+</body>
+</html>
