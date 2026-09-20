@@ -1,0 +1,141 @@
+baseURL = "https://dytruong.github.io/blogs/"
+title = "TruongTD's Blog"
+theme = "FeelIt"
+defaultContentLanguage = "en"
+
+enableRobotsTXT = true
+enableGitInfo = false
+enableEmoji = true
+
+# Options to make hugo output files (JSON needed for Lunr search)
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML", "MarkDown"]
+  section = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
+  taxonomy = ["HTML"]
+
+[languages]
+  [languages.en]
+    weight = 1
+    locale = "en"
+    label = "English"
+    copyright = "This work is licensed under CC BY-NC 4.0."
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "posts"
+        name = "Posts"
+        url = "/posts/"
+        weight = 1
+
+      [[languages.en.menu.main]]
+        identifier = "tags"
+        name = "Tags"
+        url = "/tags/"
+        weight = 2
+
+      [[languages.en.menu.main]]
+        identifier = "categories"
+        name = "Categories"
+        url = "/categories/"
+        weight = 3
+
+      [[languages.en.menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about/"
+        weight = 4
+
+      [[languages.en.menu.main]]
+        identifier = "github"
+        pre = "<i class='fa-brands fa-github fa-fw'></i>"
+        name = "GitHub"
+        url = "https://github.com/dytruong/blogs"
+        weight = 5
+
+    [languages.en.params]
+      description = "TruongTD's personal blog on technology, engineering, and experiments"
+      keywords = ["Blog", "Tech", "Hugo", "Development"]
+
+      [languages.en.params.search]
+        enable = true
+        type = "lunr"
+        contentLength = 4000
+        placeholder = "Search posts..."
+        maxResultLength = 10
+        snippetLength = 30
+        highlightTag = "em"
+        absoluteURL = false
+
+      [languages.en.params.home]
+        rss = 10
+        [languages.en.params.home.profile]
+          enable = true
+          title = "TruongTD"
+          subtitle = "Software Engineer • Lifelong Learner"
+          typeit = true
+          social = true
+          disclaimer = ""
+        [languages.en.params.home.posts]
+          enable = true
+          paginate = 10
+
+[params]
+  version = "1.0.X"
+  defaultTheme = "auto"
+  gitRepo = "https://github.com/dytruong/blogs"
+  dateFormat = "2006-01-02"
+
+  [params.author]
+    name = "TruongTD"
+    link = "https://github.com/dytruong"
+
+  [params.header]
+    desktopMode = "fixed"
+    mobileMode = "auto"
+    [params.header.title]
+      name = "TruongTD"
+      pre = "<i class='fa-solid fa-code fa-fw'></i>"
+      typeit = false
+
+  [params.footer]
+    enable = true
+    hugo = true
+    copyright = true
+    author = true
+    since = 2024
+
+  [params.page]
+    hiddenFromHomePage = false
+    hiddenFromSearch = false
+    twemoji = false
+    lightgallery = true
+    ruby = true
+    fraction = true
+    fontawesome = true
+    cdnfontawesome = true
+    linkToMarkdown = true
+
+    [params.page.toc]
+      enable = true
+      keepStatic = false
+      auto = true
+
+    [params.page.code]
+      copy = true
+      maxShownLines = 50
+
+    [params.page.math]
+      enable = true
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
