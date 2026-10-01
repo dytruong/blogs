@@ -281,7 +281,8 @@ The result? The development team can trigger deployments to UAT, Staging, and ev
 
 We'll dive into the intricate details of how that higher-environment promotion works in Part 2!
 
----|---|---|---|
+| Environment | Purpose | Who Uses It | How It's Triggered |
+|---|---|---|---|
 | **Dev** | Rapid developer sandbox | Developers | Auto-deploy on merge to `develop` |
 | **UAT** | User Acceptance Testing | QA testers & product owners | Triggered by release candidate tags (`v1.2.0-rc1`) |
 | **Staging** | Production dry run | DevOps & automated smoke tests | Triggered before production release |
@@ -326,9 +327,9 @@ Stay tuned for our next guide where we dive into AWS ECS Blue/Green traffic swap
 
 ### Developer Environment Topology
 
-I generated an interactive diagram of the CI/CD pipeline routing for the Dev environment. [**Click here to view the interactive Dev Topology Diagram**](/blogs/images/dev-topology/dev-topology.html)
+Check out the interactive diagram of the CI/CD pipeline routing for the Dev environment: [**View the interactive Dev Topology Diagram**](/blogs/images/dev-topology/dev-topology.html)
 
 
 ### Developer Environment Topology
 
-I generated an interactive diagram of the CI/CD pipeline routing for the Dev environment. [**Click here to view the interactive Dev Topology Diagram**](/blogs/images/dev-topology/dev-topology.html)
+Check out the interactive diagram of the CI/CD pipeline routing for the Dev environment: [**View the interactive Dev Topology Diagram**](/blogs/images/dev-topology/dev-topology.html)

@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="100%">
   <defs>
     <style>
-      .title-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 800; font-size: 22px; fill: #0f172a; }
+      .title-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 800; font-size: 22px; fill: #1e293b; }
       .subtitle-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #64748b; }
       .box-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 14px; }
-      .code-text { font-family: "SF Mono", "Fira Code", monospace; font-size: 12px; fill: #334155; }
+      .code-text { font-family: "SF Mono", "Fira Code", "Courier New", monospace; font-size: 12px; }
       .pill-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 700; }
       .solid-arrow { stroke: #3b82f6; stroke-width: 2.5; fill: none; }
       .purple-arrow { stroke: #8b5cf6; stroke-width: 2.5; fill: none; }
@@ -20,28 +20,28 @@
       <polygon points="0 0, 8 4, 0 8" fill="#10b981" />
     </marker>
     <filter id="card-shadow" x="-4%" y="-4%" width="108%" height="108%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#94a3b8" flood-opacity="0.15"/>
     </filter>
   </defs>
 
-  <!-- Background Canvas -->
-  <rect width="1200" height="640" fill="#f8fafc" rx="16"/>
+  <!-- Background Canvas — clean white -->
+  <rect width="1200" height="640" fill="#ffffff" rx="12"/>
 
   <!-- Diagram Title -->
-  <text x="50" y="45" class="title-text">Microservices Deployment Blueprint (Made Simple!)</text>
-  <text x="50" y="70" class="subtitle-text">Consistent Repositories • Mozilla SOPS Secrets • Centralized GitLab CI • Shared ECR ("Build Once, Deploy Everywhere")</text>
+  <text x="50" y="42" class="title-text">Microservices Deployment Blueprint (Made Simple!)</text>
+  <text x="50" y="64" class="subtitle-text">Consistent Repositories · Mozilla SOPS Secrets · Centralized GitLab CI · Shared ECR ("Build Once, Deploy Everywhere")</text>
 
   <!-- ================= SECTION 1: STANDARDIZED REPOSITORIES ================= -->
-  <g transform="translate(40, 100)" filter="url(#card-shadow)">
-    <rect width="260" height="500" rx="12" fill="#ffffff" stroke="#bfdbfe" stroke-width="2"/>
-    <rect width="260" height="42" rx="12" fill="#eff6ff"/>
+  <g transform="translate(40, 90)" filter="url(#card-shadow)">
+    <rect width="260" height="510" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+    <rect width="260" height="42" rx="12" fill="#dbeafe"/>
     <text x="18" y="27" class="box-title" fill="#1d4ed8">1. Standardized Repositories</text>
 
     <!-- Boilerplate card -->
-    <rect x="15" y="55" width="230" height="75" rx="8" fill="#f8fafc" stroke="#93c5fd" stroke-dasharray="4 3"/>
+    <rect x="15" y="55" width="230" height="75" rx="8" fill="#f0f9ff" stroke="#93c5fd" stroke-dasharray="4 3"/>
     <text x="25" y="77" class="code-text" font-weight="700" fill="#1d4ed8">📁 boilerplate-repo/</text>
-    <text x="25" y="96" class="code-text" font-size="11px" fill="#64748b">Scaffolding: Dockerfile, linter,</text>
-    <text x="25" y="112" class="code-text" font-size="11px" fill="#64748b">health checks &amp; base tests</text>
+    <text x="25" y="96" class="code-text" font-size="11px" fill="#475569">Scaffolding: Dockerfile, linter,</text>
+    <text x="25" y="112" class="code-text" font-size="11px" fill="#475569">health checks &amp; base tests</text>
 
     <!-- Down arrow from boilerplate to services -->
     <path d="M 130 130 L 130 152" class="solid-arrow" marker-end="url(#arrowhead-blue)"/>
@@ -49,86 +49,86 @@
 
     <!-- Group: microservices/ -->
     <rect x="15" y="160" width="230" height="155" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
-    <text x="25" y="184" class="code-text" font-weight="700" fill="#0f172a">📁 group: microservices/</text>
-    <text x="35" y="206" class="code-text" fill="#334155">├── user-service</text>
-    <text x="35" y="226" class="code-text" fill="#334155">├── order-service</text>
-    <text x="35" y="246" class="code-text" fill="#334155">├── catalog-service</text>
-    <text x="35" y="266" class="code-text" fill="#334155">└── web-frontend-service</text>
+    <text x="25" y="184" class="code-text" font-weight="700" fill="#1e293b">📁 group: microservices/</text>
+    <text x="35" y="206" class="code-text" fill="#475569">├── user-service</text>
+    <text x="35" y="226" class="code-text" fill="#475569">├── order-service</text>
+    <text x="35" y="246" class="code-text" fill="#475569">├── catalog-service</text>
+    <text x="35" y="266" class="code-text" fill="#475569">└── web-frontend-service</text>
     <text x="35" y="295" class="pill-text" fill="#2563eb">Rule: &lt;name&gt;-service format</text>
 
-    <!-- Microservice .gitlab-ci.yml snippet -->
-    <rect x="15" y="328" width="230" height="155" rx="8" fill="#0f172a"/>
-    <text x="25" y="350" class="code-text" fill="#38bdf8"># in each .gitlab-ci.yml</text>
-    <text x="25" y="372" class="code-text" fill="#f8fafc">include:</text>
-    <text x="35" y="392" class="code-text" fill="#f8fafc">- project: 'central-ci'</text>
-    <text x="45" y="412" class="code-text" fill="#fde047">ref: main</text>
-    <text x="25" y="437" class="code-text" fill="#f8fafc">variables:</text>
-    <text x="35" y="457" class="code-text" fill="#a7f3d0">SERVICE_NAME: "user"</text>
-    <text x="35" y="475" class="code-text" fill="#a7f3d0">TYPE: "backend"</text>
+    <!-- Microservice .gitlab-ci.yml snippet — LIGHT code block -->
+    <rect x="15" y="328" width="230" height="165" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="25" y="350" class="code-text" fill="#64748b"># in each .gitlab-ci.yml</text>
+    <text x="25" y="372" class="code-text" fill="#1e293b" font-weight="600">include:</text>
+    <text x="35" y="392" class="code-text" fill="#475569">- project: 'central-ci'</text>
+    <text x="45" y="412" class="code-text" fill="#b45309" font-weight="600">ref: main</text>
+    <text x="25" y="437" class="code-text" fill="#1e293b" font-weight="600">variables:</text>
+    <text x="35" y="457" class="code-text" fill="#047857">SERVICE_NAME: "user"</text>
+    <text x="35" y="477" class="code-text" fill="#047857">TYPE: "backend"</text>
   </g>
 
   <!-- Arrow 1 -> 2 -->
-  <path d="M 300 350 L 340 350" class="solid-arrow" marker-end="url(#arrowhead-blue)"/>
-  <text x="320" y="340" class="pill-text" fill="#2563eb" text-anchor="middle">includes</text>
+  <path d="M 300 345 L 340 345" class="solid-arrow" marker-end="url(#arrowhead-blue)"/>
+  <text x="320" y="335" class="pill-text" fill="#2563eb" text-anchor="middle">includes</text>
 
   <!-- ================= SECTION 2: CENTRAL CI & SOPS SECRETS ================= -->
-  <g transform="translate(350, 100)" filter="url(#card-shadow)">
-    <rect width="270" height="500" rx="12" fill="#ffffff" stroke="#e9d5ff" stroke-width="2"/>
-    <rect width="270" height="42" rx="12" fill="#faf5ff"/>
-    <text x="18" y="27" class="box-title" fill="#7e22ce">2. Pipeline &amp; SOPS Secrets</text>
+  <g transform="translate(350, 90)" filter="url(#card-shadow)">
+    <rect width="270" height="510" rx="12" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5"/>
+    <rect width="270" height="42" rx="12" fill="#ede9fe"/>
+    <text x="18" y="27" class="box-title" fill="#6d28d9">2. Pipeline &amp; SOPS Secrets</text>
 
     <!-- Central Pipeline Box -->
-    <rect x="15" y="55" width="240" height="150" rx="8" fill="#f8fafc" stroke="#d8b4fe"/>
-    <text x="25" y="78" class="code-text" font-weight="700" fill="#6b21a8">📁 central-ci-template/</text>
-    <text x="35" y="100" class="code-text" fill="#64748b">├── /templates/backend.yml</text>
-    <text x="35" y="120" class="code-text" fill="#64748b">├── /templates/frontend.yml</text>
-    <text x="35" y="140" class="code-text" fill="#64748b">└── /base/jobs.yml</text>
-    <text x="25" y="170" class="pill-text" fill="#7e22ce">One place to update all pipelines!</text>
-    <text x="25" y="188" class="code-text" font-size="11px" fill="#475569">Zero copy-pasting across 20 repos</text>
+    <rect x="15" y="55" width="240" height="150" rx="8" fill="#faf5ff" stroke="#c4b5fd"/>
+    <text x="25" y="78" class="code-text" font-weight="700" fill="#6d28d9">📁 central-ci-template/</text>
+    <text x="35" y="100" class="code-text" fill="#475569">├── /templates/backend.yml</text>
+    <text x="35" y="120" class="code-text" fill="#475569">├── /templates/frontend.yml</text>
+    <text x="35" y="140" class="code-text" fill="#475569">└── /base/jobs.yml</text>
+    <text x="25" y="170" class="pill-text" fill="#7c3aed">One place to update all pipelines!</text>
+    <text x="25" y="188" class="code-text" font-size="11px" fill="#64748b">Zero copy-pasting across 20 repos</text>
 
     <!-- SOPS Secrets Repo Box -->
-    <rect x="15" y="220" width="240" height="160" rx="8" fill="#f8fafc" stroke="#fbcfe8"/>
-    <text x="25" y="244" class="code-text" font-weight="700" fill="#9d174d">🔒 secrets-repo (SOPS)</text>
-    <text x="35" y="266" class="code-text" font-size="11px" fill="#64748b">• Encrypted with AWS KMS</text>
-    <text x="35" y="284" class="code-text" font-size="11px" fill="#64748b">• Values: ciphertext 🔑</text>
-    <text x="35" y="302" class="code-text" font-size="11px" fill="#64748b">• Keys: readable in Git diffs</text>
-    
-    <rect x="25" y="315" width="220" height="50" rx="6" fill="#fdf2f8" stroke="#f472b6"/>
+    <rect x="15" y="220" width="240" height="160" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="25" y="244" class="code-text" font-weight="700" fill="#c2410c">🔒 secrets-repo (SOPS)</text>
+    <text x="35" y="266" class="code-text" font-size="11px" fill="#475569">• Encrypted with AWS KMS</text>
+    <text x="35" y="284" class="code-text" font-size="11px" fill="#475569">• Values: ciphertext 🔑</text>
+    <text x="35" y="302" class="code-text" font-size="11px" fill="#475569">• Keys: readable in Git diffs</text>
+
+    <rect x="25" y="315" width="220" height="50" rx="6" fill="#fef2f8" stroke="#f9a8d4"/>
     <text x="33" y="333" class="code-text" font-size="10px" font-weight="700" fill="#be185d">Decrypted in CI into memory:</text>
     <text x="33" y="352" class="code-text" font-size="10px" fill="#475569">sops -d env.enc.yaml &gt; .env</text>
 
     <!-- Pipeline stages flow badge -->
-    <rect x="15" y="395" width="240" height="90" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
-    <text x="25" y="418" class="code-text" font-weight="700" fill="#5b21b6">CI Pipeline Execution:</text>
-    <text x="25" y="440" class="code-text" font-size="11px" fill="#4338ca">1. Test (Lint/Unit) ➔</text>
-    <text x="25" y="458" class="code-text" font-size="11px" fill="#4338ca">2. SOPS Decrypt ➔</text>
-    <text x="25" y="476" class="code-text" font-size="11px" fill="#4338ca">3. Docker Build ➔ Push ECR</text>
+    <rect x="15" y="395" width="240" height="100" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="25" y="418" class="code-text" font-weight="700" fill="#15803d">CI Pipeline Execution:</text>
+    <text x="25" y="440" class="code-text" font-size="11px" fill="#475569">1. Test (Lint/Unit) ➔</text>
+    <text x="25" y="458" class="code-text" font-size="11px" fill="#475569">2. SOPS Decrypt ➔</text>
+    <text x="25" y="476" class="code-text" font-size="11px" fill="#475569">3. Docker Build ➔ Push ECR</text>
   </g>
 
   <!-- Arrow 2 -> 3 -->
-  <path d="M 620 350 L 660 350" class="purple-arrow" marker-end="url(#arrowhead-purple)"/>
-  <text x="640" y="340" class="pill-text" fill="#7e22ce" text-anchor="middle">pushes</text>
+  <path d="M 620 345 L 660 345" class="purple-arrow" marker-end="url(#arrowhead-purple)"/>
+  <text x="640" y="335" class="pill-text" fill="#7c3aed" text-anchor="middle">pushes</text>
 
   <!-- ================= SECTION 3: SINGLE ECR REPOSITORY ================= -->
-  <g transform="translate(670, 100)" filter="url(#card-shadow)">
-    <rect width="240" height="500" rx="12" fill="#ffffff" stroke="#fed7aa" stroke-width="2"/>
-    <rect width="240" height="42" rx="12" fill="#fff7ed"/>
+  <g transform="translate(670, 90)" filter="url(#card-shadow)">
+    <rect width="240" height="510" rx="12" fill="#ffffff" stroke="#fdba74" stroke-width="1.5"/>
+    <rect width="240" height="42" rx="12" fill="#ffedd5"/>
     <text x="16" y="27" class="box-title" fill="#c2410c">3. Single Shared AWS ECR</text>
 
-    <rect x="15" y="55" width="210" height="110" rx="8" fill="#f8fafc" stroke="#fdba74"/>
+    <rect x="15" y="55" width="210" height="110" rx="8" fill="#fff7ed" stroke="#fdba74"/>
     <text x="25" y="78" class="box-title" font-size="13px" fill="#9a3412">Build Once, Deploy Everywhere</text>
-    <text x="25" y="100" class="code-text" font-size="11px" fill="#64748b">• Image tag: git commit SHA</text>
-    <text x="25" y="120" class="code-text" font-size="11px" fill="#64748b">• Immutable Docker image</text>
+    <text x="25" y="100" class="code-text" font-size="11px" fill="#475569">• Image tag: git commit SHA</text>
+    <text x="25" y="120" class="code-text" font-size="11px" fill="#475569">• Immutable Docker image</text>
     <text x="25" y="145" class="pill-text" fill="#ea580c">Zero rebuilds for Prod!</text>
 
-    <!-- Policy Box -->
-    <rect x="15" y="180" width="210" height="160" rx="8" fill="#0f172a"/>
-    <text x="25" y="204" class="code-text" fill="#fdba74"># Cross-Account Policy</text>
-    <text x="25" y="226" class="code-text" fill="#f8fafc">Principal: AWS</text>
-    <text x="35" y="246" class="code-text" fill="#93c5fd">"arn:aws:iam::UAT-ID"</text>
-    <text x="35" y="266" class="code-text" fill="#93c5fd">"arn:aws:iam::STAGING-ID"</text>
-    <text x="35" y="286" class="code-text" fill="#93c5fd">"arn:aws:iam::PROD-ID"</text>
-    <text x="25" y="312" class="code-text" fill="#f8fafc">Action: BatchGetImage</text>
+    <!-- Policy Box — LIGHT background instead of dark -->
+    <rect x="15" y="180" width="210" height="160" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="25" y="204" class="code-text" fill="#b45309" font-weight="600"># Cross-Account Policy</text>
+    <text x="25" y="226" class="code-text" fill="#1e293b">Principal: AWS</text>
+    <text x="35" y="246" class="code-text" fill="#475569">"arn:aws:iam::UAT-ID"</text>
+    <text x="35" y="266" class="code-text" fill="#475569">"arn:aws:iam::STAGING-ID"</text>
+    <text x="35" y="286" class="code-text" fill="#475569">"arn:aws:iam::PROD-ID"</text>
+    <text x="25" y="312" class="code-text" fill="#1e293b" font-weight="600">Action: BatchGetImage</text>
 
     <!-- Value proposition card -->
     <rect x="15" y="355" width="210" height="130" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
@@ -140,30 +140,30 @@
   </g>
 
   <!-- Arrow 3 -> 4 -->
-  <path d="M 910 350 L 950 350" class="green-arrow" marker-end="url(#arrowhead-green)"/>
-  <text x="930" y="340" class="pill-text" fill="#059669" text-anchor="middle">pulls</text>
+  <path d="M 910 345 L 950 345" class="green-arrow" marker-end="url(#arrowhead-green)"/>
+  <text x="930" y="335" class="pill-text" fill="#059669" text-anchor="middle">pulls</text>
 
   <!-- ================= SECTION 4: ENVIRONMENT PROMOTION ================= -->
-  <g transform="translate(960, 100)" filter="url(#card-shadow)">
-    <rect width="200" height="500" rx="12" fill="#ffffff" stroke="#a7f3d0" stroke-width="2"/>
-    <rect width="200" height="42" rx="12" fill="#ecfdf5"/>
-    <text x="16" y="27" class="box-title" fill="#047857">4. Environment Promotion</text>
+  <g transform="translate(960, 90)" filter="url(#card-shadow)">
+    <rect width="200" height="510" rx="12" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+    <rect width="200" height="42" rx="12" fill="#dcfce7"/>
+    <text x="16" y="27" class="box-title" fill="#15803d">4. Environment Promotion</text>
 
     <!-- DEV -->
-    <rect x="15" y="55" width="170" height="85" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
-    <text x="25" y="78" class="box-title" font-size="13px" fill="#0369a1">Dev Environment</text>
-    <text x="25" y="98" class="code-text" font-size="11px" fill="#64748b">• Push to develop</text>
-    <text x="25" y="116" class="code-text" font-size="11px" fill="#64748b">• Instant auto-deploy</text>
-    <text x="25" y="132" class="code-text" font-size="11px" fill="#0284c7">• Fast iteration</text>
+    <rect x="15" y="55" width="170" height="85" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="25" y="78" class="box-title" font-size="13px" fill="#1d4ed8">Dev Environment</text>
+    <text x="25" y="98" class="code-text" font-size="11px" fill="#475569">• Push to develop</text>
+    <text x="25" y="116" class="code-text" font-size="11px" fill="#475569">• Instant auto-deploy</text>
+    <text x="25" y="132" class="code-text" font-size="11px" fill="#1d4ed8">• Fast iteration</text>
 
     <!-- Self Service -->
     <rect x="15" y="152" width="170" height="150" rx="8" fill="#f0fdf4" stroke="#86efac"/>
     <text x="25" y="175" class="box-title" font-size="13px" fill="#15803d">UAT / Staging / Prod</text>
-    <text x="25" y="195" class="code-text" font-size="11px" fill="#64748b">• Complex deployments</text>
-    <text x="25" y="213" class="code-text" font-size="11px" fill="#64748b">• Fully self-service!</text>
-    <text x="25" y="233" class="code-text" font-size="11px" fill="#64748b">• Dev teams deploy without</text>
-    <text x="25" y="251" class="code-text" font-size="11px" fill="#64748b">  waiting for DevOps</text>
-    
+    <text x="25" y="195" class="code-text" font-size="11px" fill="#475569">• Complex deployments</text>
+    <text x="25" y="213" class="code-text" font-size="11px" fill="#475569">• Fully self-service!</text>
+    <text x="25" y="233" class="code-text" font-size="11px" fill="#475569">• Dev teams deploy without</text>
+    <text x="25" y="251" class="code-text" font-size="11px" fill="#475569">  waiting for DevOps</text>
+
     <rect x="25" y="265" width="150" height="28" rx="4" fill="#dcfce7" stroke="#22c55e"/>
     <text x="35" y="284" class="pill-text" fill="#166534">DevOps only on standby</text>
   </g>
