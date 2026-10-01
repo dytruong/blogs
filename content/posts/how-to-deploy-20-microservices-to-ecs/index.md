@@ -322,3 +322,13 @@ Stay tuned for our next guide where we dive into AWS ECS Blue/Green traffic swap
 ---
 
 *Found this guide helpful? Have questions about SOPS or GitLab CI includes? Leave a comment or reach out!*
+
+
+### Developer Environment Topology
+
+I generated an interactive diagram of the CI/CD pipeline routing for the Dev environment. [**Click here to view the interactive Dev Topology Diagram**](/blogs/images/dev-topology/dev-topology.html)
+
+
+### Developer Environment Topology
+
+I generated an interactive diagram of the CI/CD pipeline routing for the Dev environment. [**Click here to view the interactive Dev Topology Diagram**](/blogs/images/dev-topology/dev-topology.html)
