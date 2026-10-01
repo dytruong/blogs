@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Development Environment Topology",
+    "subtitle": "Fully automated CI/CD pipeline and runtime for the Dev sandbox",
+    "quality_profile": "showcase",
+    "output": "dev-topology.html",
+    "visual_preset": "blueprint"
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 5,
+    "origin": [40, 40],
+    "cellW": 140,
+    "cellH": 80,
+    "gapX": 60,
+    "gapY": 60
+  },
+  "components": [
+    { "id": "dev", "type": "external", "label": "Developer", "col": 0, "row": 0 },
+    { "id": "gitlab", "type": "external", "label": "GitLab CI/CD", "sublabel": "central pipeline", "col": 1, "row": 1 },
+    { "id": "sops", "type": "security", "label": "Secrets Repo", "sublabel": "Mozilla SOPS", "col": 1, "row": 0 },
+    { "id": "kms", "type": "security", "label": "AWS KMS", "sublabel": "decrypts keys", "col": 2, "row": 0 },
+    { "id": "ecs", "type": "cloud", "label": "ECS Fargate", "sublabel": "backend-api-blue", "col": 2, "row": 1 },
+    { "id": "ecr", "type": "cloud", "label": "Amazon ECR", "sublabel": "image registry", "col": 0, "row": 2 },
+    { "id": "mongodb", "type": "database", "label": "MongoDB", "sublabel": "dev database", "col": 1, "row": 2 },
+    { "id": "alb", "type": "cloud", "label": "Internal ALB", "sublabel": "load balancer", "col": 3, "row": 1 },
+    { "id": "qa", "type": "external", "label": "Internal QA", "col": 4, "row": 1 }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "AWS us-east-1 / Development",
+      "wraps": ["kms", "sops", "ecr", "mongodb", "ecs", "alb"],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    { "from": "dev", "to": "gitlab", "label": "git push", "route": "orthogonal-v" },
+    { "from": "gitlab", "to": "sops", "label": "fetch encrypted", "route": "straight" },
+    { "from": "sops", "to": "kms", "label": "decrypt", "variant": "dashed", "route": "straight" },
+    { "from": "gitlab", "to": "ecs", "label": "update-service", "route": "straight" },
+    { "from": "gitlab", "to": "ecr", "label": "docker push", "route": "orthogonal-h" },
+    { "from": "gitlab", "to": "mongodb", "label": "migrate DB", "variant": "dashed", "route": "straight", "labelAt": [300, 260] },
+    { "from": "alb", "to": "ecs", "label": "route traffic", "route": "straight" },
+    { "from": "qa", "to": "alb", "label": "HTTPS", "route": "straight" }
+  ]
+}
